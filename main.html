@@ -1,0 +1,437 @@
+<html>
+  <head>
+    <title>Isomorphism Checker</title>
+    <link rel="stylesheet" href="styles.css" />
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+    />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+    <script src="https://d3js.org/d3.v4.min.js"></script>
+    <script src="./graph.js"></script>
+  </head>
+  <body>
+    <div class="graph left">
+      <div class="uploader">
+        <form id="upload-file1" method="post" enctype="multipart/form-data">
+          <div class="custom-file mb-3">
+            <input
+              type="file"
+              class="custom-file-input"
+              id="graphfile1"
+              name="file"
+            />
+            <label class="custom-file-label" for="customFile"></label>
+          </div>
+        </form>
+      </div>
+      <div class="centered">
+        <svg id="graph1svg" width="960" height="600"></svg>
+      </div>
+    </div>
+    <div class="isomorphism-checker">
+      <button
+        type="button"
+        id="iso-btn"
+        class="btn btn-secondary"
+        onclick="showIsomorphismResult()"
+        disabled
+      >
+        Check Isomorphism
+      </button>
+    </div>
+    <div class="graph right">
+      <div class="uploader">
+        <form id="upload-file2" method="post" enctype="multipart/form-data">
+          <div class="custom-file mb-3">
+            <input
+              type="file"
+              class="custom-file-input"
+              id="graphfile2"
+              name="file"
+            />
+            <label class="custom-file-label" for="customFile"></label>
+          </div>
+        </form>
+      </div>
+      <div class="centered">
+        <svg id="graph2svg" width="960" height="600"></svg>
+      </div>
+    </div>
+
+    <script>
+      function getIsomorphismResult() {
+        return fetch("http://127.0.0.1:5000/isomorphism", {
+          method: "GET"
+        }).then(response => response.json());
+      }
+
+      function showIsomorphismResult() {
+        getIsomorphismResult().then(isomorphismJSON => {
+          if (isomorphismJSON.isIsomorphic) {
+            $("#iso-btn").css("background-color", "rgb(56, 132, 56)");
+            updateFirstGraph(isomorphismJSON.mapping);
+          } else {
+            $("#iso-btn").css("background-color", "rgb(148, 56, 56)");
+          }
+        });
+        $("#iso-btn").trigger("blur");
+      }
+
+      function isFormDataEmpty(formData) {
+        // console.log(...formData);
+        var iter = formData.entries();
+        var fileName = iter.next().value[1].name;
+        return fileName === "";
+      }
+
+      function enableCheckIsomorphismButton() {
+        if (
+          graphManager.getFirstGraph() != null &&
+          graphManager.getSecondGraph() != null
+        ) {
+          document.getElementById("iso-btn").disabled = false;
+          $("#iso-btn").css("background-color", "rgb(108, 117, 125)");
+        }
+      }
+
+      $(document).ready(function() {
+        $("#graphfile1").on("change", function() {
+          var formData = new FormData($("#upload-file1")[0]);
+          formData.append("graphOrder", 1);
+          if (isFormDataEmpty(formData)) return;
+          processGraphData(formData, 1, "#graph1svg").then(
+            isGraphDrawnSuccess => {
+              enableCheckIsomorphismButton();
+            }
+          );
+        });
+
+        $("#graphfile2").on("change", function() {
+          var formData = new FormData($("#upload-file2")[0]);
+          formData.append("graphOrder", 2);
+          if (isFormDataEmpty(formData)) return;
+          processGraphData(formData, 2, "#graph2svg").then(
+            isGraphDrawnSuccess => {
+              enableCheckIsomorphismButton();
+            }
+          );
+        });
+      });
+
+      function getParsedGraphData(formData) {
+        return fetch("http://127.0.0.1:5000/parse", {
+          method: "POST",
+          body: formData
+        }).then(response => response.json());
+      }
+
+      function createGraphObject(graphOrder, graphJSON, simulationObjects) {
+        var graphObj = graph();
+
+        graphObj.setNodes(graphJSON.nodes);
+        graphObj.setLinks(graphJSON.links);
+        graphObj.setSimulationObjects(simulationObjects);
+
+        if (graphOrder === 1) {
+          graphManager.assignFirstGraph(graphObj);
+        } else if (graphOrder === 2) {
+          graphManager.assignSecondGraph(graphObj);
+        }
+      }
+
+      function processGraphData(formData, graphOrder, svgID) {
+        return getParsedGraphData(formData).then(graphJSON => {
+          if (graphJSON["error"] == null) {
+            console.log("graph", graphJSON);
+
+            let simulationObjects = createSimulationObjects(graphJSON, svgID);
+            createGraphObject(graphOrder, graphJSON, simulationObjects);
+            return true;
+          } else {
+            alert("Unsupported File Format");
+            return false;
+          }
+        });
+      }
+
+      function createSimulationObjects(graph, svgID) {
+        var nodeSize = 7;
+        var defaultEdgeWidth = 2;
+
+        var svg = d3.select(svgID),
+          width = +svg.attr("width"),
+          height = +svg.attr("height");
+
+        svg.selectAll("*").remove();
+
+        var simulation = d3
+          .forceSimulation()
+          .force(
+            "link",
+            d3.forceLink().id(function(d) {
+              return d.id;
+            })
+          )
+          .force("charge", d3.forceManyBody())
+          .force("center", d3.forceCenter(width / 2, height / 2));
+
+        var color = d3.scaleOrdinal(d3.schemeCategory20);
+
+        var link = svg
+          .append("g")
+          .attr("class", "links")
+          .selectAll("line")
+          .data(graph.links)
+          .enter()
+          .append("line")
+          .attr("stroke-width", function(d) {
+            // Edge width, can be set to a specific value if the graph is undirected
+            if (d.value == null) return defaultEdgeWidth;
+            else return Math.sqrt(d.value);
+          });
+
+        var node = svg
+          .append("g")
+          .attr("class", "nodes")
+          .selectAll("circle")
+          .data(graph.nodes)
+          .enter()
+          .append("circle")
+          .attr("id", function(d) {
+            return svgID.substring(1) + d.id;
+          })
+          .attr("r", nodeSize)
+          .attr("fill", function(d) {
+            return color(d.group);
+          })
+          .call(
+            d3
+              .drag()
+              .on("start", dragstarted)
+              .on("drag", dragged)
+              .on("end", dragended)
+          );
+
+        node.append("title").text(function(d) {
+          return d.id;
+        });
+
+        simulation.alpha(2);
+        simulation.nodes(graph.nodes).on("tick", ticked);
+
+        simulation.force("link").links(graph.links);
+
+        function ticked() {
+          link
+            .attr("x1", function(d) {
+              return d.source.x;
+            })
+            .attr("y1", function(d) {
+              return d.source.y;
+            })
+            .attr("x2", function(d) {
+              return d.target.x;
+            })
+            .attr("y2", function(d) {
+              return d.target.y;
+            });
+
+          node
+            .attr("cx", function(d) {
+              return d.x;
+            })
+            .attr("cy", function(d) {
+              return d.y;
+            });
+        }
+
+        function dragstarted(d) {
+          if (!d3.event.active) simulation.alphaTarget(0.3).restart();
+          d.fx = d.x;
+          d.fy = d.y;
+        }
+
+        function dragged(d) {
+          d.fx = d3.event.x;
+          d.fy = d3.event.y;
+        }
+
+        function dragended(d) {
+          if (!d3.event.active) simulation.alphaTarget(0);
+          d.fx = null;
+          d.fy = null;
+        }
+
+        return { simulation: simulation, node: node, link: link };
+      }
+      // d3.select("#id51").data([{ x: 10, y: 10 }]);
+
+      function getRandomNodeColor(numOfSteps, step) {
+        // This function generates vibrant, "evenly spaced" colours (i.e. no clustering). This is ideal for creating easily distinguishable vibrant markers in Google Maps and other apps.
+        // Adam Cole, 2011-Sept-14
+        // HSV to RBG adapted from: http://mjijackson.com/2008/02/rgb-to-hsl-and-rgb-to-hsv-color-model-conversion-algorithms-in-javascript
+        var r, g, b;
+        var h = step / numOfSteps;
+        var i = ~~(h * 6);
+        var f = h * 6 - i;
+        var q = 1 - f;
+        switch (i % 6) {
+          case 0:
+            r = 1;
+            g = f;
+            b = 0;
+            break;
+          case 1:
+            r = q;
+            g = 1;
+            b = 0;
+            break;
+          case 2:
+            r = 0;
+            g = 1;
+            b = f;
+            break;
+          case 3:
+            r = 0;
+            g = q;
+            b = 1;
+            break;
+          case 4:
+            r = f;
+            g = 0;
+            b = 1;
+            break;
+          case 5:
+            r = 1;
+            g = 0;
+            b = q;
+            break;
+        }
+        var c =
+          "#" +
+          ("00" + (~~(r * 255)).toString(16)).slice(-2) +
+          ("00" + (~~(g * 255)).toString(16)).slice(-2) +
+          ("00" + (~~(b * 255)).toString(16)).slice(-2);
+        console.log(c);
+        return c;
+      }
+
+      async function updateNodesUsingMapping(
+        firstGraphNodes,
+        secondGraphNodes,
+        mapping
+      ) {
+        console.log(mapping);
+        const numberOfNodes = firstGraphNodes.length;
+        for (let firstGraphNode of firstGraphNodes) {
+          var id = firstGraphNode.id;
+          var targetID = mapping[id];
+          var secondGraphNode = secondGraphNodes.filter(function(e) {
+            return e.id == targetID;
+          })[0];
+          firstGraphNode.fx = secondGraphNode.x;
+          firstGraphNode.fy = secondGraphNode.y;
+          restart(id, targetID, getRandomNodeColor(numberOfNodes, id));
+          await new Promise(r => setTimeout(r, 500)); //const interval = 500;
+        }
+      }
+
+      function updateFirstGraph(mapping) {
+        // give the position of node as the position of the mapped node.
+
+        var firstGraph = graphManager.getFirstGraph();
+        var secondGraph = graphManager.getSecondGraph();
+
+        var firstGraphNodes = firstGraph.getNodes();
+        var firstGraphLinks = firstGraph.getLinks();
+
+        updateNodesUsingMapping(
+          firstGraphNodes,
+          secondGraph.getNodes(),
+          mapping
+        );
+      }
+
+      function restart(firstGraphNodeId, secondGraphNodeId, color) {
+        var firstGraph = graphManager.getFirstGraph();
+        var secondGraph = graphManager.getSecondGraph();
+
+        var firstGraphNodes = firstGraph.getNodes();
+        var firstGraphLinks = firstGraph.getLinks();
+
+        var simulation = firstGraph.getSimulationObjects().simulation;
+        var node = firstGraph.getSimulationObjects().node;
+        var link = firstGraph.getSimulationObjects().link;
+
+        // // Apply the general update pattern to the nodes.
+        // node = node.data(firstGraphNodes, function(d) {
+        //   return d.id;
+        // });
+        // node.exit().remove();
+        // node = node
+        //   .enter()
+        //   .append("circle")
+        //   .attr("fill", function(d) {
+        //     return color(d.id);
+        //   })
+        //   .attr("r", 8)
+        //   .merge(node);
+
+        // // Apply the general update pattern to the links.
+        // link = link.data(firstGraphLinks, function(d) {
+        //   return d.source.id + "-" + d.target.id;
+        // });
+        // link.exit().remove();
+        // link = link
+        //   .enter()
+        //   .append("line")
+        //   .merge(link);
+
+        // var svg = d3.select("#graph1svg"),
+        //   width = +svg.attr("width"),
+        //   height = +svg.attr("height");
+
+        // node = svg
+        //   .append("g")
+        //   .attr("class", "nodes")
+        //   .selectAll("circle")
+        //   .data(firstGraphNodes)
+        //   .enter()
+        //   .append("circle")
+        //   .attr("id", function(d) {
+        //     return d.id;
+        //   })
+        //   .attr("r", 8)
+        //   .attr("fill", function(d) {
+        //     return "#42f5ef";
+        //   });
+
+        d3.select("#graph1svg" + firstGraphNodeId).attr("fill", function(d) {
+          return color;
+        });
+
+        d3.select("#graph2svg" + secondGraphNodeId).attr("fill", function(d) {
+          return color;
+        });
+
+        // Update and restart the simulation.
+        simulation.nodes(firstGraphNodes);
+        simulation.force("link").links(firstGraphLinks);
+        simulation.alpha(0.1).restart();
+      }
+
+      $(".custom-file-input").on("change", function() {
+        var fileName = $(this)
+          .val()
+          .split("\\")
+          .pop();
+        $(this)
+          .siblings(".custom-file-label")
+          .addClass("selected")
+          .html(fileName);
+      });
+    </script>
+  </body>
+</html>

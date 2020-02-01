@@ -1,0 +1,62 @@
+.graph {
+  height: 100%;
+  width: 50%;
+  position: fixed;
+  z-index: 1;
+  top: 0;
+  overflow-x: hidden;
+  padding-top: 20px;
+}
+
+.left {
+  left: 0;
+  background-color: rgb(48, 48, 48);
+}
+
+.right {
+  right: 0;
+  background-color: rgb(64, 64, 64);
+}
+
+.centered {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.uploader {
+  color: white;
+  position: absolute;
+  zoom: 80%;
+  top: 6.5%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.isomorphism-checker {
+  position: fixed;
+  top: 6.5%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  z-index: 2;
+}
+
+.isomorphism-checker button {
+  -webkit-transition: background-color 0.3s ease-in-out;
+  -moz-transition: background-color 0.3s ease-in-out;
+  -o-transition: background-color 0.3s ease-in-out;
+  -khtml-transition: background-color 0.3s ease-in-out;
+  transition: background-color 0.3s ease-in-out;
+}
+
+.links line {
+  stroke: #999;
+  stroke-opacity: 1;
+}
+
+.nodes circle {
+  stroke: #fff;
+  stroke-width: 1.5px;
+}
