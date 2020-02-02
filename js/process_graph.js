@@ -13,8 +13,9 @@ function createGraphObject(graphOrder, graphJSON, simulationObjects) {
 }
 
 function createSimulationObjects(graph, svgID) {
-  var nodeSize = 7;
+  var defaultNodeSize = 7;
   var defaultEdgeWidth = 2;
+  var clickedNodeSize = 10;
 
   var svg = d3.select(svgID),
     width = +svg.attr("width"),
@@ -58,7 +59,7 @@ function createSimulationObjects(graph, svgID) {
     .attr("id", function(d) {
       return svgID.substring(1) + d.id;
     })
-    .attr("r", nodeSize)
+    .attr("r", defaultNodeSize)
     .attr("fill", function(d) {
       return color(d.group);
     })
@@ -71,7 +72,22 @@ function createSimulationObjects(graph, svgID) {
     );
 
   node.append("title").text(function(d) {
-    return d.id;
+    return "Node " + d.id;
+  });
+
+  node.on("click", function() {
+    var currentNodeSize = d3.select(this).attr("r");
+    if (currentNodeSize == clickedNodeSize) {
+      d3.select(this).attr("r", defaultNodeSize);
+    } else {
+      d3.select(this).attr("r", clickedNodeSize);
+    }
+    // console.log(a);
+    // d3.selectAll("circle").attr("r", defaultNodeSize);
+    // d3.select(this).attr("id", function(d) {
+    //   console.log(d.id);
+    //   return d.id;
+    // });
   });
 
   simulation.alpha(2);

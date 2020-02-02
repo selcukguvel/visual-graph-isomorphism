@@ -1,6 +1,8 @@
 function showIsomorphismResult() {
   getIsomorphismResult().then(isomorphismJSON => {
     if (isomorphismJSON.isIsomorphic) {
+      $("#result-scroll-pane tbody").empty();
+      document.getElementById("result-scroll-pane").style.display = "block";
       $("#iso-btn").css("background-color", "rgb(56, 132, 56)");
       updateFirstGraph(isomorphismJSON.mapping);
     } else {
@@ -66,22 +68,87 @@ function getRandomNodeColor(numOfSteps, step) {
   return c;
 }
 
+// var secondGraphNode = secondGraphNodes.filter(function(e) {
+//   return e.id == targetID;
+// })[0];
+
+function getMappedSecondGraphNode(node, secondGraphNodes, mapping) {
+  var id = node.id;
+  var targetID = mapping[id];
+  var secondGraphNode = secondGraphNodes.filter(function(e) {
+    return e.id == targetID;
+  })[0];
+  return secondGraphNode;
+}
+
+function getDistBetweenNodeCoordinates(node, secondGraphNodes, mapping) {
+  var secondGraphNode = getMappedSecondGraphNode(
+    node,
+    secondGraphNodes,
+    mapping
+  );
+  return Math.hypot(node.x - secondGraphNode.x, node.y - secondGraphNode.y);
+}
+
+function sortFirstGraphNodes(firstGraphNodes, secondGraphNodes, mapping) {
+  /* Sort nodes of first graph in increasing order with respect to the
+     euclidean distance between the mapped second graph nodes.
+     By doing that, the nodes with smallest distances between the mapped nodes will
+     be arranged earlier. */
+
+  firstGraphNodes.sort(function(node1, node2) {
+    var node1Dist = getDistBetweenNodeCoordinates(
+      node1,
+      secondGraphNodes,
+      mapping
+    );
+    var node2Dist = getDistBetweenNodeCoordinates(
+      node2,
+      secondGraphNodes,
+      mapping
+    );
+
+    if (node1Dist < node2Dist) {
+      return -1;
+    }
+    if (node1Dist > node2Dist) {
+      return 1;
+    }
+    return 0;
+  });
+}
+
+function addMappingRowToTable(nodeColor, firstGraphNodeID, secondGraphNodeID) {
+  let leftRow = `<b><font color="${nodeColor}">${firstGraphNodeID}</font></b>`;
+  let rightRow = `<b><font color="${nodeColor}">${secondGraphNodeID}</font></b>`;
+
+  $("#result-table").append(`<tr><td>${leftRow}</td><td>${rightRow}</td></tr>`);
+  $("#result-scroll-pane").scrollTop($("#result-table")[0].scrollHeight);
+}
+
 async function updateNodesUsingMapping(
   firstGraphNodes,
   secondGraphNodes,
   mapping
 ) {
-  console.log(mapping);
   const numberOfNodes = firstGraphNodes.length;
+  sortFirstGraphNodes(firstGraphNodes, secondGraphNodes, mapping);
   for (let firstGraphNode of firstGraphNodes) {
-    var id = firstGraphNode.id;
-    var targetID = mapping[id];
-    var secondGraphNode = secondGraphNodes.filter(function(e) {
-      return e.id == targetID;
-    })[0];
+    var secondGraphNode = getMappedSecondGraphNode(
+      firstGraphNode,
+      secondGraphNodes,
+      mapping
+    );
     firstGraphNode.fx = secondGraphNode.x;
     firstGraphNode.fy = secondGraphNode.y;
-    restart(id, targetID, getRandomNodeColor(numberOfNodes, id));
+
+    let [firstGraphNodeID, secondGraphNodeID] = [
+      firstGraphNode.id,
+      secondGraphNode.id
+    ];
+    var nodeColor = getRandomNodeColor(numberOfNodes, firstGraphNodeID);
+    restart(firstGraphNodeID, secondGraphNodeID, nodeColor);
+    addMappingRowToTable(nodeColor, firstGraphNodeID, secondGraphNodeID);
     await new Promise(r => setTimeout(r, 500)); //const interval = 500;
   }
 }
@@ -114,5 +181,5 @@ function restart(firstGraphNodeId, secondGraphNodeId, color) {
   // Update and restart the simulation.
   simulation.nodes(firstGraphNodes);
   simulation.force("link").links(firstGraphLinks);
-  simulation.alpha(0.1).restart();
+  simulation.alpha(1).restart();
 }

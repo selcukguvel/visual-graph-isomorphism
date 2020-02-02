@@ -15,7 +15,7 @@
 
 .right {
   right: 0;
-  background-color: rgb(64, 64, 64);
+  background-color: rgb(62, 68, 74);
 }
 
 .centered {
@@ -43,6 +43,16 @@
   z-index: 2;
 }
 
+.isomorphism-result {
+  background-color: rgb(76, 82, 88);
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  z-index: 2;
+}
+
 .isomorphism-checker button {
   -webkit-transition: background-color 0.3s ease-in-out;
   -moz-transition: background-color 0.3s ease-in-out;
@@ -59,4 +69,10 @@
 .nodes circle {
   stroke: #fff;
   stroke-width: 1.5px;
+}
+
+.nodes text {
+  pointer-events: none;
+  font: 40px sans-serif;
+  stroke: #fff;
 }

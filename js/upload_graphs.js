@@ -21,7 +21,10 @@ $(document).ready(function() {
     formData.append("graphOrder", 1);
     if (isFormDataEmpty(formData)) return;
     processGraphData(formData, 1, "#graph1svg").then(isGraphDrawnSuccess => {
-      enableCheckIsomorphismButton();
+      if (isGraphDrawnSuccess) {
+        enableCheckIsomorphismButton();
+        document.getElementById("result-scroll-pane").style.display = "none";
+      }
     });
   });
 
@@ -30,18 +33,21 @@ $(document).ready(function() {
     formData.append("graphOrder", 2);
     if (isFormDataEmpty(formData)) return;
     processGraphData(formData, 2, "#graph2svg").then(isGraphDrawnSuccess => {
-      enableCheckIsomorphismButton();
+      if (isGraphDrawnSuccess) {
+        enableCheckIsomorphismButton();
+        document.getElementById("result-scroll-pane").style.display = "none";
+      }
     });
   });
-});
 
-$(".custom-file-input").on("change", function() {
-  var fileName = $(this)
-    .val()
-    .split("\\")
-    .pop();
-  $(this)
-    .siblings(".custom-file-label")
-    .addClass("selected")
-    .html(fileName);
+  $(".custom-file-input").on("change", function() {
+    var fileName = $(this)
+      .val()
+      .split("\\")
+      .pop();
+    $(this)
+      .siblings(".custom-file-label")
+      .addClass("selected")
+      .html(fileName);
+  });
 });
