@@ -1,21 +1,31 @@
+import csv
+import io
+import sys
+
 from flask import Flask
 from flask import request
 from flask_cors import CORS
-from flask import jsonify
 
 import networkx as nx
 from networkx.readwrite import json_graph
 from networkx.algorithms import isomorphism
 
-import csv
-import io
-import sys
 
 app = Flask(__name__)
 CORS(app)
 
 firstGraph = nx.Graph()
 secondGraph = nx.Graph()
+
+
+@app.route('/parse', methods=['POST'])
+def parse_graph():
+    print('Parsing the graph..', file=sys.stdout)
+    graph_file = request.files['file'].read()
+    graph = parse(graph_file)
+    saveGraphToMemory(graph, request.form['graphOrder'])
+    response = getParsedGraphResponseJSON(graph)
+    return response
 
 
 def parse(byte_graph_file):
@@ -32,20 +42,6 @@ def parse(byte_graph_file):
         return None
 
 
-def getParsedGraphResponseJSON(graph):
-    response = {}
-    if (graph == None):
-        response['error'] = 'Unsupported file format.'
-    else:
-        graphJSON = json_graph.node_link_data(graph)
-        # a = json_graph.node_link_graph(data)
-        response['nodes'] = graphJSON['nodes']
-        response['links'] = graphJSON['links']
-        response['numOfNodes'] = graph.number_of_nodes()
-        response['numOfEdges'] = graph.number_of_edges()
-    return response
-
-
 def saveGraphToMemory(graph, graphOrder):
     global firstGraph
     global secondGraph
@@ -56,13 +52,23 @@ def saveGraphToMemory(graph, graphOrder):
         secondGraph = graph
 
 
-@app.route('/parse', methods=['POST'])
-def parse_graph():
-    print('Parsing the graph..', file=sys.stdout)
-    graph_file = request.files['file'].read()
-    graph = parse(graph_file)
-    saveGraphToMemory(graph, request.form['graphOrder'])
-    response = getParsedGraphResponseJSON(graph)
+def getParsedGraphResponseJSON(graph):
+    response = {}
+    if (graph == None):
+        response['error'] = 'Unsupported file format.'
+    else:
+        graphJSON = json_graph.node_link_data(graph)
+        response['nodes'] = graphJSON['nodes']
+        response['links'] = graphJSON['links']
+        response['numOfNodes'] = graph.number_of_nodes()
+        response['numOfEdges'] = graph.number_of_edges()
+    return response
+
+
+@app.route('/isomorphism', methods=['GET'])
+def check_isomorphism_between_graphs():
+    print('Checking isomorphism between graphs..', file=sys.stdout)
+    response = getIsomorphismResultResponseJSON()
     return response
 
 
@@ -75,13 +81,6 @@ def getIsomorphismResultResponseJSON():
             response['mapping'] = graph_matcher.mapping
     else:
         response['isIsomorphic'] = False
-    return response
-
-
-@app.route('/isomorphism', methods=['GET'])
-def check_isomorphism_between_graphs():
-    print('Checking isomorphism between graphs..', file=sys.stdout)
-    response = getIsomorphismResultResponseJSON()
     return response
 
 
