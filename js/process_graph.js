@@ -86,9 +86,16 @@ function createSimulationObjects(graph, svgID) {
   node.on("click", function() {
     var currentNodeSize = d3.select(this).attr("r");
     if (currentNodeSize == clickedNodeSize) {
+      // Node was clicked before.
       d3.select(this).attr("r", defaultNodeSize);
     } else {
       d3.select(this).attr("r", clickedNodeSize);
+      // Check whether mapping between graphs is available
+      // If available:
+      //  Scroll down in the scroll pane in order to highlight the
+      //  row which contains the clicked node and the target node.
+      //  AND
+      //  Enlarge the mapped node in the right graph.
     }
     // console.log(a);
     // d3.selectAll("circle").attr("r", defaultNodeSize);
