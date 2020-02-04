@@ -1,15 +1,23 @@
-function createGraphObject(graphOrder, graphJSON, simulationObjects) {
-  var graphObj = graph();
+function processGraphData(formData, graphOrder, svgID) {
+  return getParsedGraphData(formData).then(graphJSON => {
+    if (graphJSON["error"] == null) {
+      console.log("graph", graphJSON);
 
-  graphObj.setNodes(graphJSON.nodes);
-  graphObj.setLinks(graphJSON.links);
-  graphObj.setSimulationObjects(simulationObjects);
+      let simulationObjects = createSimulationObjects(graphJSON, svgID);
+      createGraphObject(graphOrder, graphJSON, simulationObjects);
+      return true;
+    } else {
+      alert("Unsupported File Format");
+      return false;
+    }
+  });
+}
 
-  if (graphOrder === 1) {
-    graphManager.assignFirstGraph(graphObj);
-  } else if (graphOrder === 2) {
-    graphManager.assignSecondGraph(graphObj);
-  }
+function getParsedGraphData(formData) {
+  return fetch("http://127.0.0.1:5000/parse", {
+    method: "POST",
+    body: formData
+  }).then(response => response.json());
 }
 
 function createSimulationObjects(graph, svgID) {
@@ -139,24 +147,16 @@ function createSimulationObjects(graph, svgID) {
   return { simulation: simulation, node: node, link: link };
 }
 
-function getParsedGraphData(formData) {
-  return fetch("http://127.0.0.1:5000/parse", {
-    method: "POST",
-    body: formData
-  }).then(response => response.json());
-}
+function createGraphObject(graphOrder, graphJSON, simulationObjects) {
+  var graphObj = graph();
 
-function processGraphData(formData, graphOrder, svgID) {
-  return getParsedGraphData(formData).then(graphJSON => {
-    if (graphJSON["error"] == null) {
-      console.log("graph", graphJSON);
+  graphObj.setNodes(graphJSON.nodes);
+  graphObj.setLinks(graphJSON.links);
+  graphObj.setSimulationObjects(simulationObjects);
 
-      let simulationObjects = createSimulationObjects(graphJSON, svgID);
-      createGraphObject(graphOrder, graphJSON, simulationObjects);
-      return true;
-    } else {
-      alert("Unsupported File Format");
-      return false;
-    }
-  });
+  if (graphOrder === 1) {
+    graphManager.assignFirstGraph(graphObj);
+  } else if (graphOrder === 2) {
+    graphManager.assignSecondGraph(graphObj);
+  }
 }

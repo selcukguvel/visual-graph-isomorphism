@@ -1,20 +1,3 @@
-function isFormDataEmpty(formData) {
-  // console.log(...formData);
-  var iter = formData.entries();
-  var fileName = iter.next().value[1].name;
-  return fileName === "";
-}
-
-function enableCheckIsomorphismButton() {
-  if (
-    graphManager.getFirstGraph() != null &&
-    graphManager.getSecondGraph() != null
-  ) {
-    document.getElementById("iso-btn").disabled = false;
-    $("#iso-btn").css("background-color", "rgb(108, 117, 125)");
-  }
-}
-
 $(document).ready(function() {
   $("#graphfile1").on("change", function() {
     var formData = new FormData($("#upload-file1")[0]);
@@ -51,3 +34,20 @@ $(document).ready(function() {
       .html(fileName);
   });
 });
+
+function isFormDataEmpty(formData) {
+  // console.log(...formData);
+  var iter = formData.entries();
+  var fileName = iter.next().value[1].name;
+  return fileName === "";
+}
+
+function enableCheckIsomorphismButton() {
+  if (
+    graphManager.getFirstGraph() != null &&
+    graphManager.getSecondGraph() != null
+  ) {
+    document.getElementById("iso-btn").disabled = false;
+    $("#iso-btn").css("background-color", "rgb(108, 117, 125)");
+  }
+}
