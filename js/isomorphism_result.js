@@ -4,6 +4,8 @@ function showIsomorphismResult() {
       $("#result-scroll-pane tbody").empty();
       document.getElementById("result-scroll-pane").style.display = "block";
       $("#iso-btn").css("background-color", "rgb(56, 132, 56)");
+
+      graphManager.assignMappingBetweenGraphs(isomorphismJSON.mapping);
       updateFirstGraph(isomorphismJSON.mapping);
     } else {
       $("#iso-btn").css("background-color", "rgb(148, 56, 56)");
