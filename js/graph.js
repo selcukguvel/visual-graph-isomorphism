@@ -28,10 +28,20 @@ var graph = function() {
 var graphManager = (function() {
   var firstGraph;
   var secondGraph;
+  var mappingBetweenGraphs;
 
   function storeGraphInstance(graph, graphOrder) {
     if (graphOrder === 1) firstGraph = graph;
     else if (graphOrder === 2) secondGraph = graph;
+    clearMappingBetweenGraphs();
+  }
+
+  function storeMappingBetweenGraphs(mapping) {
+    mappingBetweenGraphs = mapping;
+  }
+
+  function clearMappingBetweenGraphs() {
+    mappingBetweenGraphs = null;
   }
 
   return {
@@ -46,6 +56,9 @@ var graphManager = (function() {
     },
     getSecondGraph: function() {
       return secondGraph;
+    },
+    assignMappingBetweenGraphs: function(mapping) {
+      storeMappingBetweenGraphs(mapping);
     }
   };
 })();
