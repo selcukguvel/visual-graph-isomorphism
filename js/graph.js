@@ -59,6 +59,9 @@ var graphManager = (function() {
     },
     assignMappingBetweenGraphs: function(mapping) {
       storeMappingBetweenGraphs(mapping);
+    },
+    getMappingBetweenGraphs: function() {
+      return mappingBetweenGraphs;
     }
   };
 })();

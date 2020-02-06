@@ -64,6 +64,9 @@ function createSimulationObjects(graph, svgID) {
     .data(graph.nodes)
     .enter()
     .append("circle")
+    .attr("realID", function(d) {
+      return d.id;
+    })
     .attr("id", function(d) {
       return svgID.substring(1) + d.id;
     })
@@ -83,27 +86,39 @@ function createSimulationObjects(graph, svgID) {
     return "Node " + d.id;
   });
 
-  node.on("click", function() {
-    var currentNodeSize = d3.select(this).attr("r");
-    if (currentNodeSize == clickedNodeSize) {
-      // Node was clicked before.
-      d3.select(this).attr("r", defaultNodeSize);
-    } else {
+  node.on(
+    "click",
+    function() {
+      d3.selectAll("circle").attr("r", defaultNodeSize);
       d3.select(this).attr("r", clickedNodeSize);
       // Check whether mapping between graphs is available
-      // If available:
+      var mapping = graphManager.getMappingBetweenGraphs();
+      if (mapping != null) {
+        var nodeId = d3.select(this).attr("realID");
+        console.log(nodeId);
+        if (Object.keys(mapping).includes(nodeId)) {
+          // First graph
+          var secondGraphNodeID = mapping[nodeId];
+          d3.select("#graph2svg" + secondGraphNodeID).attr(
+            "r",
+            clickedNodeSize
+          );
+        } else if (Object.keys(values).includes(nodeId)) {
+          // Second graph
+          var firstGraphNodeID = Object.keys(mapping).find(
+            key => obj[key] === nodeId
+          );
+          d3.select("#graph1svg" + firstGraphNodeID).attr("r", clickedNodeSize);
+        }
+      }
       //  Scroll down in the scroll pane in order to highlight the
       //  row which contains the clicked node and the target node.
-      //  AND
-      //  Enlarge the mapped node in the right graph.
     }
-    // console.log(a);
-    // d3.selectAll("circle").attr("r", defaultNodeSize);
     // d3.select(this).attr("id", function(d) {
     //   console.log(d.id);
     //   return d.id;
     // });
-  });
+  );
 
   simulation.alpha(2);
   simulation.nodes(graph.nodes).on("tick", ticked);

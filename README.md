@@ -10,8 +10,8 @@
 
 #### `pip install -r requirements.txt`
 
-### Running code
+### Running code (Python3 is prerequisite)
 
-#### `python3 service/graph_matcher.py`
+#### `python service/graph_matcher.py`
 
 #### Open `index.html` in your browser
