@@ -184,6 +184,8 @@ function addMappingRowToTable(nodeColor, firstGraphNodeID, secondGraphNodeID) {
   let leftRow = `<b><font color="${nodeColor}">${firstGraphNodeID}</font></b>`;
   let rightRow = `<b><font color="${nodeColor}">${secondGraphNodeID}</font></b>`;
 
-  $("#result-table").append(`<tr><td>${leftRow}</td><td>${rightRow}</td></tr>`);
+  $("#result-table").append(
+    `<tr id="${firstGraphNodeID}-${secondGraphNodeID}"><td>${leftRow}</td><td>${rightRow}</td></tr>`
+  );
   $("#result-scroll-pane").scrollTop($("#result-table")[0].scrollHeight);
 }

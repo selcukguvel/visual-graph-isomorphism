@@ -92,6 +92,7 @@ function createSimulationObjects(graph, svgID) {
       if (mapping != null) {
         var nodeId = d3.select(this).attr("realID");
         console.log(nodeId);
+        var targetRowID;
         if (Object.keys(mapping).includes(nodeId)) {
           // First graph
           var secondGraphNodeID = mapping[nodeId];
@@ -99,6 +100,7 @@ function createSimulationObjects(graph, svgID) {
             "r",
             constants.getClickedNodeSize()
           );
+          targetRowID = nodeId + "-" + secondGraphNodeID;
         } else if (Object.keys(values).includes(nodeId)) {
           // Second graph
           var firstGraphNodeID = Object.keys(mapping).find(
@@ -108,8 +110,27 @@ function createSimulationObjects(graph, svgID) {
             "r",
             constants.getClickedNodeSize()
           );
+          targetRowID = firstGraphNodeID + "-" + nodeId;
         }
-        $("#result-scroll-pane").scrollTop(45); // Get the td elements of table, go to that position and highlight it.
+        // var a = document.getElementById(targetRowID).offsetHeight;
+        // console.log(a);
+        // $("#result-scroll-pane").scrollTop(45); // Get the td elements of table, go to that position and highlight it.
+
+        var $container = $("#result-scroll-pane"),
+          $scrollTo = $(`#${targetRowID}`);
+
+        console.log($container.scrollTop());
+        console.log($scrollTo.offset().top);
+        console.log($container.offset().top);
+
+        $container.scrollTop(
+          $scrollTo.offset().top -
+            $container.offset().top +
+            $container.scrollTop()
+        );
+
+        // document.getElementById(targetRowID).style.backgroundColor =
+        //   "rgb(166, 179, 191)";
       }
       //  Scroll down in the scroll pane in order to highlight the
       //  row which contains the clicked node and the target node.
