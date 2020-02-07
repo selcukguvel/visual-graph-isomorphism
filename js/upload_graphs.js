@@ -3,24 +3,28 @@ $(document).ready(function() {
     var formData = new FormData($("#upload-file1")[0]);
     formData.append("graphOrder", 1);
     if (isFormDataEmpty(formData)) return;
-    processGraphData(formData, 1, "#graph1svg").then(isGraphDrawnSuccess => {
-      if (isGraphDrawnSuccess) {
-        enableCheckIsomorphismButton();
-        document.getElementById("result-scroll-pane").style.display = "none";
+    processGraphData(formData, 1, constants.getFirstGraphSvgID()).then(
+      isGraphDrawnSuccess => {
+        if (isGraphDrawnSuccess) {
+          enableCheckIsomorphismButton();
+          document.getElementById("result-scroll-pane").style.display = "none";
+        }
       }
-    });
+    );
   });
 
   $("#graphfile2").on("change", function() {
     var formData = new FormData($("#upload-file2")[0]);
     formData.append("graphOrder", 2);
     if (isFormDataEmpty(formData)) return;
-    processGraphData(formData, 2, "#graph2svg").then(isGraphDrawnSuccess => {
-      if (isGraphDrawnSuccess) {
-        enableCheckIsomorphismButton();
-        document.getElementById("result-scroll-pane").style.display = "none";
+    processGraphData(formData, 2, constants.getSecondGraphSvgID()).then(
+      isGraphDrawnSuccess => {
+        if (isGraphDrawnSuccess) {
+          enableCheckIsomorphismButton();
+          document.getElementById("result-scroll-pane").style.display = "none";
+        }
       }
-    });
+    );
   });
 
   $(".custom-file-input").on("change", function() {

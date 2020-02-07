@@ -21,10 +21,6 @@ function getParsedGraphData(formData) {
 }
 
 function createSimulationObjects(graph, svgID) {
-  var defaultNodeSize = 7;
-  var defaultEdgeWidth = 2;
-  var clickedNodeSize = 10;
-
   var svg = d3.select(svgID),
     width = +svg.attr("width"),
     height = +svg.attr("height");
@@ -53,7 +49,7 @@ function createSimulationObjects(graph, svgID) {
     .append("line")
     .attr("stroke-width", function(d) {
       // Edge width, can be set to a specific value if the graph is undirected
-      if (d.value == null) return defaultEdgeWidth;
+      if (d.value == null) return constants.getDefaultEdgeWidth();
       else return Math.sqrt(d.value);
     });
 
@@ -70,7 +66,7 @@ function createSimulationObjects(graph, svgID) {
     .attr("id", function(d) {
       return svgID.substring(1) + d.id;
     })
-    .attr("r", defaultNodeSize)
+    .attr("r", constants.getDefaultNodeSize())
     .attr("fill", function(d) {
       return color(d.group);
     })
@@ -89,8 +85,8 @@ function createSimulationObjects(graph, svgID) {
   node.on(
     "click",
     function() {
-      d3.selectAll("circle").attr("r", defaultNodeSize);
-      d3.select(this).attr("r", clickedNodeSize);
+      d3.selectAll("circle").attr("r", constants.getDefaultNodeSize());
+      d3.select(this).attr("r", constants.getClickedNodeSize());
       // Check whether mapping between graphs is available
       var mapping = graphManager.getMappingBetweenGraphs();
       if (mapping != null) {
@@ -99,17 +95,21 @@ function createSimulationObjects(graph, svgID) {
         if (Object.keys(mapping).includes(nodeId)) {
           // First graph
           var secondGraphNodeID = mapping[nodeId];
-          d3.select("#graph2svg" + secondGraphNodeID).attr(
+          d3.select(constants.getSecondGraphSvgID() + secondGraphNodeID).attr(
             "r",
-            clickedNodeSize
+            constants.getClickedNodeSize()
           );
         } else if (Object.keys(values).includes(nodeId)) {
           // Second graph
           var firstGraphNodeID = Object.keys(mapping).find(
             key => obj[key] === nodeId
           );
-          d3.select("#graph1svg" + firstGraphNodeID).attr("r", clickedNodeSize);
+          d3.select(constants.getFirstGraphSvgID() + firstGraphNodeID).attr(
+            "r",
+            constants.getClickedNodeSize()
+          );
         }
+        $("#result-scroll-pane").scrollTop(45); // Get the td elements of table, go to that position and highlight it.
       }
       //  Scroll down in the scroll pane in order to highlight the
       //  row which contains the clicked node and the target node.
