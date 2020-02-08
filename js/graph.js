@@ -77,15 +77,13 @@ var graphNodeClickHandler = (function() {
   }
 
   function revertPreviouslyClickedNodeActions() {
-    console.log(clickedNode);
-    console.log(otherNodeElementID);
-
     if (clickedNode != null && otherNodeElementID != null) {
       try {
         d3.select(clickedNode).attr("r", constants.getDefaultNodeSize());
         d3.select(otherNodeElementID).attr("r", constants.getDefaultNodeSize());
-        document.getElementById(targetRowID).style.backgroundColor =
-          "rgb(76, 82, 88)";
+        document.getElementById(
+          targetRowID
+        ).style.backgroundColor = constants.getTableRowBackgroundColor();
       } catch (err) {
         // Newly uploaded graphs may haven't got ids of previously processed graphs.
         // Error is suppressed in here to not clear the variables when a new graph is uploaded.
@@ -95,10 +93,7 @@ var graphNodeClickHandler = (function() {
 
   function performCurrentlyClickedNodeActions(nodeObj, mapping) {
     clickedNode = nodeObj;
-    d3.select(clickedNode).attr("r", constants.getClickedNodeSize());
     setRowIDForResultsTable(mapping);
-    // var tableRows = $("#result-table > tbody > tr");
-    // console.log(tableRows);
     scrollToRowInResultsTable();
     highlightRowInResultsTable();
   }
@@ -109,13 +104,11 @@ var graphNodeClickHandler = (function() {
       .select(clickedNode)
       .attr("id")
       .includes(constants.getFirstGraphSvgID().substr(1));
-    console.log(isFirstGraph);
     if (isFirstGraph) {
       // First graph node is selected
       var otherNodeID = mapping[nodeID];
       otherNodeElementID = constants.getSecondGraphSvgID() + otherNodeID;
-
-      d3.select(otherNodeElementID).attr("r", constants.getClickedNodeSize());
+      enlargeSizeOfNodes();
       targetRowID = nodeID + "-" + otherNodeID;
     } else {
       // Second graph node is selected
@@ -123,10 +116,14 @@ var graphNodeClickHandler = (function() {
         key => mapping[key] === nodeID
       );
       otherNodeElementID = constants.getFirstGraphSvgID() + otherNodeID;
-
-      d3.select(otherNodeElementID).attr("r", constants.getClickedNodeSize());
+      enlargeSizeOfNodes();
       targetRowID = otherNodeID + "-" + nodeID;
     }
+  }
+
+  function enlargeSizeOfNodes() {
+    d3.select(clickedNode).attr("r", constants.getClickedNodeSize());
+    d3.select(otherNodeElementID).attr("r", constants.getClickedNodeSize());
   }
 
   function scrollToRowInResultsTable() {
@@ -139,8 +136,9 @@ var graphNodeClickHandler = (function() {
   }
 
   function highlightRowInResultsTable() {
-    document.getElementById(targetRowID).style.backgroundColor =
-      "rgb(70, 76, 81)";
+    document.getElementById(
+      targetRowID
+    ).style.backgroundColor = constants.getTableRowHighlightedBackgroundColor();
   }
 
   return {

@@ -56,6 +56,9 @@ function enableCheckIsomorphismButton() {
     graphManager.getSecondGraph() != null
   ) {
     document.getElementById("iso-btn").disabled = false;
-    $("#iso-btn").css("background-color", "rgb(108, 117, 125)");
+    $("#iso-btn").css(
+      "background-color",
+      constants.getCheckIsomorphismButtonColor()
+    );
   }
 }

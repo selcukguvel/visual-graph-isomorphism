@@ -3,12 +3,18 @@ function showIsomorphismResult() {
     if (isomorphismJSON.isIsomorphic) {
       $("#result-scroll-pane tbody").empty();
       document.getElementById("result-scroll-pane").style.display = "block";
-      $("#iso-btn").css("background-color", "rgb(56, 132, 56)");
+      $("#iso-btn").css(
+        "background-color",
+        constants.getIsomorphicGraphsButtonColor()
+      );
 
       graphManager.assignMappingBetweenGraphs(isomorphismJSON.mapping);
       updateFirstGraph(isomorphismJSON.mapping);
     } else {
-      $("#iso-btn").css("background-color", "rgb(148, 56, 56)");
+      $("#iso-btn").css(
+        "background-color",
+        constants.getNonIsomorphicGraphsButtonColor()
+      );
     }
   });
   $("#iso-btn").trigger("blur");
@@ -148,7 +154,6 @@ function getRandomNodeColor(numOfSteps, step) {
     ("00" + (~~(r * 255)).toString(16)).slice(-2) +
     ("00" + (~~(g * 255)).toString(16)).slice(-2) +
     ("00" + (~~(b * 255)).toString(16)).slice(-2);
-  console.log(c);
   return c;
 }
 
@@ -177,7 +182,7 @@ function restart(firstGraphNodeId, secondGraphNodeId, color) {
   // Update and restart the simulation.
   simulation.nodes(firstGraphNodes);
   simulation.force("link").links(firstGraphLinks);
-  simulation.alpha(1).restart();
+  simulation.alpha(0.5).restart();
 }
 
 function addMappingRowToTable(nodeColor, firstGraphNodeID, secondGraphNodeID) {
