@@ -3,7 +3,11 @@ function processGraphData(formData, graphOrder, svgID) {
     if (graphJSON["error"] == null) {
       console.log("graph", graphJSON);
 
-      let simulationObjects = createSimulationObjects(graphJSON, svgID);
+      let simulationObjects = createSimulationObjects(
+        graphOrder,
+        graphJSON,
+        svgID
+      );
       createGraphObject(graphOrder, graphJSON, simulationObjects);
       return true;
     } else {
@@ -20,7 +24,7 @@ function getParsedGraphData(formData) {
   }).then(response => response.json());
 }
 
-function createSimulationObjects(graph, svgID) {
+function createSimulationObjects(graphOrder, graph, svgID) {
   var svg = d3.select(svgID),
     width = +svg.attr("width"),
     height = +svg.attr("height");
@@ -73,9 +77,9 @@ function createSimulationObjects(graph, svgID) {
     .call(
       d3
         .drag()
-        .on("start", dragstarted)
-        .on("drag", dragged)
-        .on("end", dragended)
+        .on("start", graphOrder == 2 ? dragstarted : null)
+        .on("drag", graphOrder == 2 ? dragged : null)
+        .on("end", graphOrder == 2 ? dragended : null)
     );
 
   node.append("title").text(function(d) {
