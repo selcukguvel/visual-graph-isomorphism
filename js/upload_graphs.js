@@ -1,5 +1,6 @@
 $(document).ready(function() {
   $("#graphfile1").on("change", function() {
+    document.getElementById("loadingBar1").style.display = "block";
     var formData = new FormData($("#upload-file1")[0]);
     formData.append("graphOrder", 1);
     if (isFormDataEmpty(formData)) return;
@@ -9,11 +10,13 @@ $(document).ready(function() {
           enableCheckIsomorphismButton();
           document.getElementById("result-scroll-pane").style.display = "none";
         }
+        document.getElementById("loadingBar1").style.display = "none";
       }
     );
   });
 
   $("#graphfile2").on("change", function() {
+    document.getElementById("loadingBar2").style.display = "block";
     var formData = new FormData($("#upload-file2")[0]);
     formData.append("graphOrder", 2);
     if (isFormDataEmpty(formData)) return;
@@ -23,6 +26,7 @@ $(document).ready(function() {
           enableCheckIsomorphismButton();
           document.getElementById("result-scroll-pane").style.display = "none";
         }
+        document.getElementById("loadingBar2").style.display = "none";
       }
     );
   });
