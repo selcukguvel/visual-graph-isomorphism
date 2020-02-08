@@ -83,51 +83,9 @@ function createSimulationObjects(graph, svgID) {
   });
 
   node.on("click", function() {
-    d3.selectAll("circle").attr("r", constants.getDefaultNodeSize());
-    d3.select(this).attr("r", constants.getClickedNodeSize());
-
-    // Check whether mapping between graphs is available
     var mapping = graphManager.getMappingBetweenGraphs();
     if (mapping != null) {
-      var nodeId = d3.select(this).attr("realID");
-      var targetRowID;
-      if (Object.keys(mapping).includes(nodeId)) {
-        // First graph
-        var secondGraphNodeID = mapping[nodeId];
-        d3.select(constants.getSecondGraphSvgID() + secondGraphNodeID).attr(
-          "r",
-          constants.getClickedNodeSize()
-        );
-        targetRowID = nodeId + "-" + secondGraphNodeID;
-      } else if (Object.keys(values).includes(nodeId)) {
-        // Second graph
-        var firstGraphNodeID = Object.keys(mapping).find(
-          key => obj[key] === nodeId
-        );
-        d3.select(constants.getFirstGraphSvgID() + firstGraphNodeID).attr(
-          "r",
-          constants.getClickedNodeSize()
-        );
-        targetRowID = firstGraphNodeID + "-" + nodeId;
-      }
-
-      var $container = $("#result-scroll-pane"),
-        $scrollTo = $(`#${targetRowID}`);
-
-      $container.scrollTop(
-        $scrollTo.offset().top -
-          $container.offset().top +
-          $container.scrollTop()
-      );
-
-      var tableRows = $("#result-table > tbody > tr");
-      console.log(tableRows);
-      tableRows.each(function() {
-        $(this).css("background-color", "rgb(76, 82, 88)");
-      });
-
-      document.getElementById(targetRowID).style.backgroundColor =
-        "rgb(70, 76, 81)";
+      graphNodeClickHandler.clickEvent(this, mapping);
     }
   });
 
