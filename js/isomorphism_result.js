@@ -58,7 +58,7 @@ async function updateNodesUsingMapping(
     var nodeColor = getRandomNodeColor(numberOfNodes, firstGraphNodeID);
     restart(firstGraphNodeID, secondGraphNodeID, nodeColor);
     addMappingRowToTable(nodeColor, firstGraphNodeID, secondGraphNodeID);
-    await new Promise(r => setTimeout(r, 500)); //const interval = 500;
+    await new Promise(r => setTimeout(r, constants.getNodeUpdatingInterval()));
   }
 }
 
@@ -165,19 +165,19 @@ function restart(firstGraphNodeId, secondGraphNodeId, color) {
 
   var simulation = firstGraph.getSimulationObjects().simulation;
 
-  d3.select(constants.getFirstGraphSvgID() + firstGraphNodeId).attr(
-    "fill",
-    function(d) {
-      return color;
-    }
-  );
+  var firstGraphNodeElementID =
+    constants.getFirstGraphSvgID() + firstGraphNodeId;
+  d3.select(firstGraphNodeElementID).attr("r", constants.getDefaultNodeSize());
+  d3.select(firstGraphNodeElementID).attr("fill", function(d) {
+    return color;
+  });
 
-  d3.select(constants.getSecondGraphSvgID() + secondGraphNodeId).attr(
-    "fill",
-    function(d) {
-      return color;
-    }
-  );
+  var secondGraphNodeElementID =
+    constants.getSecondGraphSvgID() + secondGraphNodeId;
+  d3.select(secondGraphNodeElementID).attr("r", constants.getDefaultNodeSize());
+  d3.select(secondGraphNodeElementID).attr("fill", function(d) {
+    return color;
+  });
 
   // Update and restart the simulation.
   simulation.nodes(firstGraphNodes);

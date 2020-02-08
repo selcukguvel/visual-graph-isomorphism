@@ -3,6 +3,8 @@ var constants = (function() {
   var clickedNodeSize = 10;
   var defaultEdgeWidth = 2;
 
+  var nodeUpdatingInterval = 500;
+
   var firstGraphSvgID = "#graph1svg";
   var secondGraphSvgID = "#graph2svg";
 
@@ -22,6 +24,9 @@ var constants = (function() {
     },
     getDefaultEdgeWidth: function() {
       return defaultEdgeWidth;
+    },
+    getNodeUpdatingInterval: function() {
+      return nodeUpdatingInterval;
     },
     getFirstGraphSvgID: function() {
       return firstGraphSvgID;
