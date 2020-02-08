@@ -1,9 +1,9 @@
 $(document).ready(function() {
   $("#graphfile1").on("change", function() {
-    document.getElementById("loadingBar1").style.display = "block";
     var formData = new FormData($("#upload-file1")[0]);
     formData.append("graphOrder", 1);
     if (isFormDataEmpty(formData)) return;
+    document.getElementById("loadingBar1").style.display = "block";
     processGraphData(formData, 1, constants.getFirstGraphSvgID()).then(
       isGraphDrawnSuccess => {
         if (isGraphDrawnSuccess) {
@@ -16,10 +16,10 @@ $(document).ready(function() {
   });
 
   $("#graphfile2").on("change", function() {
-    document.getElementById("loadingBar2").style.display = "block";
     var formData = new FormData($("#upload-file2")[0]);
     formData.append("graphOrder", 2);
     if (isFormDataEmpty(formData)) return;
+    document.getElementById("loadingBar2").style.display = "block";
     processGraphData(formData, 2, constants.getSecondGraphSvgID()).then(
       isGraphDrawnSuccess => {
         if (isGraphDrawnSuccess) {
