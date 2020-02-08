@@ -1,34 +1,10 @@
 $(document).ready(function() {
   $("#graphfile1").on("change", function() {
-    var formData = new FormData($("#upload-file1")[0]);
-    formData.append("graphOrder", 1);
-    if (isFormDataEmpty(formData)) return;
-    document.getElementById("loadingBar1").style.display = "block";
-    processGraphData(formData, 1, constants.getFirstGraphSvgID()).then(
-      isGraphDrawnSuccess => {
-        if (isGraphDrawnSuccess) {
-          enableCheckIsomorphismButton();
-          document.getElementById("result-scroll-pane").style.display = "none";
-        }
-        document.getElementById("loadingBar1").style.display = "none";
-      }
-    );
+    performUploadAction("#upload-file1", 1, "loadingBar1");
   });
 
   $("#graphfile2").on("change", function() {
-    var formData = new FormData($("#upload-file2")[0]);
-    formData.append("graphOrder", 2);
-    if (isFormDataEmpty(formData)) return;
-    document.getElementById("loadingBar2").style.display = "block";
-    processGraphData(formData, 2, constants.getSecondGraphSvgID()).then(
-      isGraphDrawnSuccess => {
-        if (isGraphDrawnSuccess) {
-          enableCheckIsomorphismButton();
-          document.getElementById("result-scroll-pane").style.display = "none";
-        }
-        document.getElementById("loadingBar2").style.display = "none";
-      }
-    );
+    performUploadAction("#upload-file2", 2, "loadingBar2");
   });
 
   $(".custom-file-input").on("change", function() {
@@ -42,6 +18,24 @@ $(document).ready(function() {
       .html(fileName);
   });
 });
+
+function performUploadAction(uploadFileFormID, graphOrder, loadingBarID) {
+  var formData = new FormData($(uploadFileFormID)[0]);
+  formData.append("graphOrder", graphOrder);
+  if (isFormDataEmpty(formData)) return;
+  document.getElementById(loadingBarID).style.display = "block";
+  var svgID =
+    graphOrder == 1
+      ? constants.getFirstGraphSvgID()
+      : constants.getSecondGraphSvgID();
+  processGraphData(formData, graphOrder, svgID).then(isGraphDrawnSuccess => {
+    if (isGraphDrawnSuccess) {
+      enableCheckIsomorphismButton();
+      document.getElementById("result-scroll-pane").style.display = "none";
+    }
+    document.getElementById(loadingBarID).style.display = "none";
+  });
+}
 
 function isFormDataEmpty(formData) {
   // console.log(...formData);
