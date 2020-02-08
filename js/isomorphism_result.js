@@ -1,4 +1,5 @@
 function showIsomorphismResult() {
+  document.getElementById("iso-btn").disabled = true;
   getIsomorphismResult().then(isomorphismJSON => {
     if (isomorphismJSON.isIsomorphic) {
       $("#result-scroll-pane tbody").empty();
@@ -10,6 +11,7 @@ function showIsomorphismResult() {
 
       graphManager.assignMappingBetweenGraphs(isomorphismJSON.mapping);
       updateFirstGraph(isomorphismJSON.mapping);
+      enableCheckIsomorphismButtonAfterUpdate();
     } else {
       $("#iso-btn").css(
         "background-color",
@@ -193,4 +195,11 @@ function addMappingRowToTable(nodeColor, firstGraphNodeID, secondGraphNodeID) {
     `<tr id="${firstGraphNodeID}-${secondGraphNodeID}"><td>${leftRow}</td><td>${rightRow}</td></tr>`
   );
   $("#result-scroll-pane").scrollTop($("#result-table")[0].scrollHeight);
+}
+
+function enableCheckIsomorphismButtonAfterUpdate() {
+  setTimeout(function() {
+    document.getElementById("iso-btn").disabled = false;
+  }, graphManager.getFirstGraph().getNodes().length *
+    constants.getNodeUpdatingInterval());
 }
