@@ -1,6 +1,6 @@
 <html>
   <head>
-    <title>Isomorphism Checker</title>
+    <title>Visual Graph Isomorphism</title>
     <link rel="stylesheet" href="styles.css" />
     <link
       rel="stylesheet"
@@ -14,6 +14,7 @@
     <script src="js/graph.js"></script>
     <script src="js/process_graph.js"></script>
     <script src="js/isomorphism_result.js"></script>
+    <script src="js/save_isomorphism_result.js"></script>
   </head>
   <body>
     <div class="graph left">
@@ -40,7 +41,7 @@
     <div class="isomorphism-checker">
       <button
         type="button"
-        id="iso-btn"
+        id="check-iso-btn"
         class="btn btn-secondary"
         onclick="showIsomorphismResult()"
         disabled
@@ -48,19 +49,37 @@
         Check Isomorphism
       </button>
     </div>
-    <div class="isomorphism-result">
-      <div
-        class="overflow-auto"
-        id="result-scroll-pane"
-        style="width: 175px; height: 145px; display:none;"
-      >
-        <table
-          class="table table-borderless"
-          id="result-table"
-          style="text-align: center;"
+    <div
+      class="isomorphism-result-container"
+      id="result-container"
+      style="display:block;"
+    >
+      <div class="isomorphism-result">
+        <div
+          class="overflow-auto"
+          id="result-scroll-pane"
+          style="width: 175px; height: 145px;"
         >
-          <tbody></tbody>
-        </table>
+          <table
+            class="table table-borderless"
+            id="result-table"
+            style="text-align: center;"
+          >
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+      <div class="save-isomorphism-result">
+        <button
+          type="button"
+          id="save-iso-results-btn"
+          class="btn"
+          style="color: rgb(255, 255, 255); background-color: rgb(62, 93, 145);"
+          onclick="saveIsomorphismResult()"
+          disabled
+        >
+          Save
+        </button>
       </div>
     </div>
     <div class="graph right">

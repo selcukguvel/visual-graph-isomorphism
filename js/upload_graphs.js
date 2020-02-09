@@ -31,7 +31,7 @@ function performUploadAction(uploadFileFormID, graphOrder, loadingBarID) {
   processGraphData(formData, graphOrder, svgID).then(isGraphDrawnSuccess => {
     if (isGraphDrawnSuccess) {
       enableCheckIsomorphismButton();
-      document.getElementById("result-scroll-pane").style.display = "none";
+      document.getElementById("result-container").style.display = "none";
     }
     document.getElementById(loadingBarID).style.display = "none";
   });
@@ -49,8 +49,8 @@ function enableCheckIsomorphismButton() {
     graphManager.getFirstGraph() != null &&
     graphManager.getSecondGraph() != null
   ) {
-    document.getElementById("iso-btn").disabled = false;
-    $("#iso-btn").css(
+    document.getElementById("check-iso-btn").disabled = false;
+    $("#check-iso-btn").css(
       "background-color",
       constants.getCheckIsomorphismButtonColor()
     );

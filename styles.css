@@ -51,10 +51,28 @@
   z-index: 2;
 }
 
+.isomorphism-result-container {
+  position: relative;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 2;
+}
+
 .isomorphism-result {
   background-color: rgb(76, 82, 88);
   position: fixed;
+  text-align: center;
   top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 2;
+}
+
+.save-isomorphism-result {
+  position: absolute;
+  bottom: 0;
+  top: 80px;
   left: 50%;
   transform: translate(-50%, -50%);
   text-align: center;

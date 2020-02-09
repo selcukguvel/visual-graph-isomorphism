@@ -1,10 +1,10 @@
 function showIsomorphismResult() {
-  document.getElementById("iso-btn").disabled = true;
+  document.getElementById("check-iso-btn").disabled = true;
   getIsomorphismResult().then(isomorphismJSON => {
     if (isomorphismJSON.isIsomorphic) {
       $("#result-scroll-pane tbody").empty();
-      document.getElementById("result-scroll-pane").style.display = "block";
-      $("#iso-btn").css(
+      document.getElementById("result-container").style.display = "block";
+      $("#check-iso-btn").css(
         "background-color",
         constants.getIsomorphicGraphsButtonColor()
       );
@@ -13,13 +13,14 @@ function showIsomorphismResult() {
       updateFirstGraph(isomorphismJSON.mapping);
       enableCheckIsomorphismButtonAfterUpdate();
     } else {
-      $("#iso-btn").css(
+      $("#check-iso-btn").css(
         "background-color",
         constants.getNonIsomorphicGraphsButtonColor()
       );
     }
   });
-  $("#iso-btn").trigger("blur");
+  $("#check-iso-btn").trigger("blur");
+  $("#save-iso-results-btn").trigger("blur");
 }
 
 function getIsomorphismResult() {
@@ -199,7 +200,8 @@ function addMappingRowToTable(nodeColor, firstGraphNodeID, secondGraphNodeID) {
 
 function enableCheckIsomorphismButtonAfterUpdate() {
   setTimeout(function() {
-    document.getElementById("iso-btn").disabled = false;
+    document.getElementById("check-iso-btn").disabled = false;
+    document.getElementById("save-iso-results-btn").disabled = false;
   }, graphManager.getFirstGraph().getNodes().length *
     constants.getNodeUpdatingInterval());
 }
