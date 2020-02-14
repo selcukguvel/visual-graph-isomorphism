@@ -1,5 +1,6 @@
 function showIsomorphismResult() {
   document.getElementById("check-iso-btn").disabled = true;
+  document.getElementById("save-iso-results-btn").disabled = true;
   getIsomorphismResult().then(isomorphismJSON => {
     if (isomorphismJSON.isIsomorphic) {
       $("#result-scroll-pane tbody").empty();
