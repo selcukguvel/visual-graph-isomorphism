@@ -1,5 +1,7 @@
 # Visual Graph Isomorphism
 
+![visual-graph-isomorphism](https://user-images.githubusercontent.com/22414712/74593626-370cc680-503e-11ea-9d7f-36b58eda8e04.gif)
+
 A program that shows graph isomorphism visually by adjusting the position of nodes according to the mapping obtained through **`NetworkX`** library. In order to display the graphs and adjusting their nodes, **`D3.js`** library is used.
 
 ## Downloading & Running
