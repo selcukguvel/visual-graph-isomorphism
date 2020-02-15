@@ -4,6 +4,7 @@ function showIsomorphismResult() {
   getIsomorphismResult().then(isomorphismJSON => {
     if (isomorphismJSON.isIsomorphic) {
       $("#result-scroll-pane tbody").empty();
+      $(".saved-file-info").empty();
       document.getElementById("result-container").style.display = "block";
       $("#check-iso-btn").css(
         "background-color",
@@ -18,6 +19,7 @@ function showIsomorphismResult() {
         "background-color",
         constants.getNonIsomorphicGraphsButtonColor()
       );
+      document.getElementById("check-iso-btn").disabled = false;
     }
   });
   $("#check-iso-btn").trigger("blur");

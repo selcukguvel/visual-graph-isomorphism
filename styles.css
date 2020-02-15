@@ -79,6 +79,17 @@
   z-index: 2;
 }
 
+.saved-file-info {
+  position: absolute;
+  color: rgb(207, 7, 7);
+  bottom: 0;
+  top: 130px;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  z-index: 2;
+}
+
 .isomorphism-checker button {
   -webkit-transition: background-color 0.3s ease-in-out;
   -moz-transition: background-color 0.3s ease-in-out;

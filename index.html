@@ -38,13 +38,16 @@
         <img src="assets/loading.svg" />
       </div>
     </div>
-    <div class="isomorphism-checker">
+    <div
+      class="isomorphism-checker"
+      id="iso-checker-container"
+      style="display:none"
+    >
       <button
         type="button"
         id="check-iso-btn"
         class="btn btn-secondary"
         onclick="showIsomorphismResult()"
-        disabled
       >
         Check Isomorphism
       </button>
@@ -81,6 +84,7 @@
           Save
         </button>
       </div>
+      <div class="saved-file-info"></div>
     </div>
     <div class="graph right">
       <div class="uploader">

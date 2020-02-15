@@ -49,7 +49,7 @@ function enableCheckIsomorphismButton() {
     graphManager.getFirstGraph() != null &&
     graphManager.getSecondGraph() != null
   ) {
-    document.getElementById("check-iso-btn").disabled = false;
+    document.getElementById("iso-checker-container").style.display = "block";
     $("#check-iso-btn").css(
       "background-color",
       constants.getCheckIsomorphismButtonColor()

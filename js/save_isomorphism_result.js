@@ -2,10 +2,10 @@ function saveIsomorphismResult() {
   requestSaveIsomorphismResult().then(response => {
     console.log(response);
     if (response.fileCreatedSuccess) {
-      // Your file is saved to ..
+      $(".saved-file-info").text(response.fileName);
       console.log(response.fileName);
     } else {
-      // File couldn't be saved.
+      $(".saved-file-info").text("The file couldn't be created.");
     }
   });
 }
