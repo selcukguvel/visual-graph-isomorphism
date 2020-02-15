@@ -28,20 +28,8 @@ function performUploadAction(uploadFileFormID, graphOrder, loadingBarID) {
     graphOrder == 1
       ? constants.getFirstGraphSvgID()
       : constants.getSecondGraphSvgID();
-  processGraphData(formData, graphOrder, svgID).then(isGraphDrawnSuccess => {
-    if (isGraphDrawnSuccess) {
-      enableCheckIsomorphismButton();
-    } else {
-      d3.select(svgID)
-        .selectAll("*")
-        .remove();
-      clearIsomorphismResult();
-      $("#check-iso-btn").css(
-        "background-color",
-        constants.getCheckIsomorphismButtonColor()
-      );
-      document.getElementById("check-iso-btn").disabled = true;
-    }
+  processGraphData(formData, graphOrder, svgID).then(() => {
+    enableCheckIsomorphismButton(graphOrder, svgID);
     document.getElementById("result-container").style.display = "none";
     document.getElementById(loadingBarID).style.display = "none";
   });
@@ -54,13 +42,26 @@ function isFormDataEmpty(formData) {
   return fileName === "";
 }
 
-function enableCheckIsomorphismButton() {
+function enableCheckIsomorphismButton(graphOrder, svgID) {
   if (
     graphManager.getFirstGraph() != null &&
     graphManager.getSecondGraph() != null
   ) {
     document.getElementById("iso-checker-container").style.display = "block";
     document.getElementById("check-iso-btn").disabled = false;
+    $("#check-iso-btn").css(
+      "background-color",
+      constants.getCheckIsomorphismButtonColor()
+    );
+  } else if (
+    (graphOrder == 1 && graphManager.getFirstGraph() == null) ||
+    (graphOrder == 2 && graphManager.getSecondGraph() == null)
+  ) {
+    d3.select(svgID)
+      .selectAll("*")
+      .remove();
+    clearIsomorphismResult();
+    document.getElementById("check-iso-btn").disabled = true;
     $("#check-iso-btn").css(
       "background-color",
       constants.getCheckIsomorphismButtonColor()
