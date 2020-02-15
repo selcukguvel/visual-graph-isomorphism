@@ -3,8 +3,7 @@ function showIsomorphismResult() {
   document.getElementById("save-iso-results-btn").disabled = true;
   getIsomorphismResult().then(isomorphismJSON => {
     if (isomorphismJSON.isIsomorphic) {
-      $("#result-scroll-pane tbody").empty();
-      $(".saved-file-info").empty();
+      clearIsomorphismResult();
       document.getElementById("result-container").style.display = "block";
       $("#check-iso-btn").css(
         "background-color",

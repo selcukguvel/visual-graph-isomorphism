@@ -12,6 +12,7 @@ function processGraphData(formData, graphOrder, svgID) {
       return true;
     } else {
       alert("Unsupported File Format");
+      saveGraphToMemory(graphOrder, null);
       return false;
     }
   });
@@ -149,6 +150,10 @@ function createGraphObject(graphOrder, graphJSON, simulationObjects) {
   graphObj.setLinks(graphJSON.links);
   graphObj.setSimulationObjects(simulationObjects);
 
+  saveGraphToMemory(graphOrder, graphObj);
+}
+
+function saveGraphToMemory(graphOrder, graphObj) {
   if (graphOrder === 1) {
     graphManager.assignFirstGraph(graphObj);
   } else if (graphOrder === 2) {

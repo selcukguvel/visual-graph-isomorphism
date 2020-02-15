@@ -79,14 +79,16 @@ def check_isomorphism_between_graphs():
 def get_isomorphism_result_response_json():
     global mapping_between_graphs
     response = {}
-    if (nx.faster_could_be_isomorphic(first_graph, second_graph)):
-        graph_matcher = isomorphism.GraphMatcher(first_graph, second_graph)
-        if (graph_matcher.is_isomorphic()):
-            response['isIsomorphic'] = True
-            response['mapping'] = graph_matcher.mapping
-            mapping_between_graphs = graph_matcher.mapping
-    else:
-        response['isIsomorphic'] = False
+    if (first_graph != None and second_graph != None):
+        if (nx.faster_could_be_isomorphic(first_graph, second_graph)):
+            graph_matcher = isomorphism.GraphMatcher(first_graph, second_graph)
+            if (graph_matcher.is_isomorphic()):
+                response['isIsomorphic'] = True
+                response['mapping'] = graph_matcher.mapping
+                mapping_between_graphs = graph_matcher.mapping
+                return response
+
+    response['isIsomorphic'] = False
     return response
 
 
