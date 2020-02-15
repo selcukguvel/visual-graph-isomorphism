@@ -1,17 +1,40 @@
-# Visual-Graph-Isomorphism
+# Visual Graph Isomorphism
 
-### Downloading repository
+A program that shows graph isomorphism visually by adjusting the position of nodes according to the mapping obtained through **`NetworkX`** library. In order to display the graphs and adjusting their nodes, **`D3.js`** library is used.
 
-#### `git clone https://github.com/selcukguvel/visual-graph-isomorphism`
+## Downloading & Running
 
-### Installing required libraries
+### Download Repository
 
-#### `cd visual-graph-isomorphism`
+```bash 
+git clone https://github.com/selcukguvel/visual-graph-isomorphism
+```
 
-#### `pip install -r requirements.txt`
+### Install Required Libraries
 
-### Running code (Python3 is prerequisite)
+```bash  
+cd visual-graph-isomorphism
+pip install -r requirements.txt
+```
 
-#### `python service/graph_matcher.py`
+### Run Program (Python3 is prerequisite)
 
-#### Open `index.html` in your browser
+```bash   
+python service/graph_matcher.py
+```
+```bash   
+Open index.html
+```
+
+## Graph File Format
+
+In graph file, each line contains space separated (whitespace, tab etc.) ids of two nodes:
+```
+node_1   node_2
+node_1   node_4
+node_2   node_3
+node_3   node_4
+...
+```
+where `node_i` is the id of the node as a number.
+
