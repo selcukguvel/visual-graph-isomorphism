@@ -48,6 +48,6 @@ where `node_i` is the id of the node as a number. The order of vertices in the f
   - Left graph will be adjusted according to the mapping (although there may be multiple mappings between the graphs, the one that **NetworkX** library returns is considered).
   - The positions of the nodes are adjusted with respect to distances between their initial positions and the mapped nodes' positions, using the Euclidean distance, in increasing order.
 - Click to one of the nodes in left or right graph to highlight the id mapping row between these nodes in the table.
-- Click **Save** button in order to save the mapping between two graphs to the **mapping** directory.
+- Click **Save** button in order to save the mapping between two graphs as a file to the **mapping** directory.
 - Adjust the right graph as you want and click again **Check Isomorphism** button to adjust the left graph to final node positions displayed in the right graph.
 - Upload new graphs and check isomorphism as many as you want. 
