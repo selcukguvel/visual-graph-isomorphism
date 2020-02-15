@@ -30,7 +30,7 @@ Open index.html
 
 ## Graph File Format
 
-In an undirected graph file, each line contains space separated (whitespace, tab etc.) ids of two nodes:
+In an undirected graph file, each line contains space separated ids of two nodes:
 ```
 node_1   node_2
 node_1   node_4
