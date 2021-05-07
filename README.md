@@ -8,29 +8,34 @@ A program that shows graph isomorphism visually by adjusting the position of nod
 
 ### Download Repository
 
-```bash 
+```bash
 git clone https://github.com/selcukguvel/visual-graph-isomorphism
 ```
 
-### Install Required Libraries
+### Create a virtual environment and activate it
 
-```bash  
-cd visual-graph-isomorphism
-pip install -r requirements.txt
+https://packaging.python.org/guides/installing-using-pip-and-virtual-environments/
+
+### Install dependencies
+
+```bash
+pip3 install -r requirements.txt
 ```
 
 ### Run Program (Python3 is prerequisite)
 
-```bash   
+```bash
 python service/graph_matcher.py
 ```
-```bash   
+
+```bash
 Open index.html
 ```
 
 ## Graph File Format
 
 In an undirected graph file, each line contains space separated ids of two nodes:
+
 ```
 node_1   node_2
 node_1   node_4
@@ -38,6 +43,7 @@ node_2   node_3
 node_3   node_4
 ...
 ```
+
 where `node_i` is the id of the node as a number. The order of vertices in the file is trivial.
 
 ## Steps & Approach
@@ -50,4 +56,4 @@ where `node_i` is the id of the node as a number. The order of vertices in the f
 - Click to one of the nodes in left or right graph to highlight the id mapping row between these nodes in the table.
 - Click **Save** button in order to save the mapping between two graphs as a file to the **mapping** directory.
 - Adjust the right graph as you want and click again **Check Isomorphism** button to adjust the left graph to final node positions displayed in the right graph.
-- Upload new graphs and check isomorphism as many as you want. 
+- Upload new graphs and check isomorphism as many as you want.
