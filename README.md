@@ -22,10 +22,10 @@ https://packaging.python.org/guides/installing-using-pip-and-virtual-environment
 pip3 install -r requirements.txt
 ```
 
-### Run Program (Python3 is prerequisite)
+### Run Program
 
 ```bash
-python service/graph_matcher.py
+python3 service/graph_matcher.py
 ```
 
 ```bash
